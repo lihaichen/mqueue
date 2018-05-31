@@ -6,6 +6,8 @@ extern "C" {
 #include "message.h"
 #include "thread.h"
 #include "time.h"
+#include "debug.h"
+#include "init.h"
 
 #ifdef __cplusplus
 }

@@ -3,17 +3,17 @@
 static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
   switch (message) {
     case MSG_INIT: {
-      printf("MSG_INIT\n");
+      equeue_info("MSG_INIT\n");
       timer_add(hmod, 1, 1000, NULL, TIMER_ASYNC);
       timer_start(hmod, 1);
     }
 
     break;
     case MSG_TIMER: {
-      printf("MSG_TIMER %d %d\n", wparam, lparam);
+      equeue_info("MSG_TIMER %lu %lu\n", wparam, lparam);
     } break;
     case MSG_COMMAND: {
-      printf("MSG_COMMAND\n");
+      equeue_info("MSG_COMMAND\n");
     } break;
   }
 
