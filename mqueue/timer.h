@@ -15,69 +15,68 @@
  *
  * =====================================================================================
  */
-#ifndef __TIMER_H__
-#define __TIMER_H__
+#ifndef __MQUEUE_TIMER_H__
+#define __MQUEUE_TIMER_H__
 
-#include "object.h"
-#include "message.h"
-#include <time.h>
-#include <sys/time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <string.h>
 #include <assert.h>
 #include <poll.h>
-#include <signal.h>
 #include <semaphore.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
+#include "message.h"
+#include "object.h"
 
-#define TIMER_STOP		0
-#define TIMER_START		1
+#define TIMER_STOP 0
+#define TIMER_START 1
 
-#define TIMER_ASYNC		0
-#define TIMER_SYNC		1
+#define TIMER_ASYNC 0
+#define TIMER_SYNC 1
 
 #define TICK_PER_SECOND 10
-#define ONE_SECOND	TICK_PER_SECOND
+#define ONE_SECOND TICK_PER_SECOND
 
 #define TIMERID_DEFAULT -1
 
 /**
-* @brief 定时器回调函数类型
-*
-* @param 参数
-*
-* @return NULL
-*/
-typedef void (*timer_func_t)(void *parameter);
+ * @brief 定时器回调函数类型
+ *
+ * @param 参数
+ *
+ * @return NULL
+ */
+typedef void (*timer_func_t)(void* parameter);
 
 /**
-* @brief 定时器类
-*/
-typedef struct object_timer
-{
-	struct object parent;	///<基类
+ * @brief 定时器类
+ */
+typedef struct object_timer {
+  struct object parent;  ///<基类
 
-	int mode;	///<定时器种类
+  int mode;  ///<定时器种类
 
-	HMOD hmod;	///<定时器归属
-	ULONG id;		///<定时器编号
+  HMOD hmod;  ///<定时器归属
+  ULONG id;   ///<定时器编号
 
-	int timeout_tick;	///<当前定时计数
-	int init_tick;	///<定时器超时时间
+  int timeout_tick;  ///<当前定时计数
+  int init_tick;     ///<定时器超时时间
 
-	int run;	///<0 pause, 1 run
-	int type;	///<0 async, 1 sync
-	void *user_data;
-}*object_timer_t;
+  int run;   ///< 0 pause, 1 run
+  int type;  ///< 0 async, 1 sync
+  void* user_data;
+} * object_timer_t;
 
-void timer_add(HMOD hmod, ULONG id, int init_tick, void *user_data, int type);
+void timer_add(HMOD hmod, ULONG id, int init_tick, void* user_data, int type);
 void timer_remove(HMOD hmod, ULONG id);
 void timer_start(HMOD hmod, ULONG id);
 void timer_stop(HMOD hmod, ULONG id);
 void timer_control(HMOD hmod, ULONG id, int init_tick);
 
-void *thread_timer_entry(void *parameter);
+void* thread_timer_entry(void* parameter);
 
 #endif

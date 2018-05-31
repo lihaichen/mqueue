@@ -173,6 +173,7 @@ void* thread_timer_entry(void* parameter) {
     EXIT_LOCK(&object_container[object_class_type_timer].lock);
 
     old_timer_counter = __timer_counter;
+    MQUEUE_USLEEP(2000);
   }
 
   return NULL;

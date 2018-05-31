@@ -2,6 +2,10 @@
 #ifndef __MQUEUE_OBJECT_H__
 #define __MQUEUE_OBJECT_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include "config.h"
 #include "def.h"
 #include "list.h"
@@ -89,5 +93,9 @@ int object_type(object_t object);
 #define OBJECT_FOREACH_RESET(type)         \
   node = object_container[type].list.next; \
   continue;
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif

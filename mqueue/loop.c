@@ -6,5 +6,5 @@
  */
 void mqueue_loop(void) {
   for (;;)
-    MQUEUE_SLEEP(1000 * 1000);
+    MQUEUE_USLEEP(1000 * 1000);
 }

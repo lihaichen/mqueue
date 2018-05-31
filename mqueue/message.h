@@ -2,6 +2,10 @@
 #ifndef __MQUEUE_MESSAGE_H__
 #define __MQUEUE_MESSAGE_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include "def.h"
 #include "object.h"
 #include "types.h"
@@ -67,5 +71,9 @@ int send_message(HMOD hmod, int message, WPARAM wparam, LPARAM lparam);
 int post_message(HMOD hmod, int message, WPARAM wparam, LPARAM lparam);
 int get_message(HMOD hmod, msg_t pmsg);
 int dispatch_message(msg_t pmsg);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif

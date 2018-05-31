@@ -15,7 +15,7 @@ extern "C" {
 #define ONLINE 1
 #define CONNECTING 2
 
-#define MQUEUE_SLEEP(us) usleep(us)
+#define MQUEUE_USLEEP(us) usleep(us)
 
 #define NOW time(NULL)
 
