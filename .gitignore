@@ -3,3 +3,5 @@
 .DS_Store
 a.out
 .vscode/
+test
+mqueue.a

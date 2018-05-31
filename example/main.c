@@ -1,4 +1,4 @@
-#include "mqueue.h"
+#include "../mqueue/mqueue.h"
 
 static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
   switch (message) {
