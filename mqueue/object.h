@@ -10,9 +10,6 @@ extern "C" {
 #include "def.h"
 #include "list.h"
 
-#include <pthread.h>
-#include <string.h>
-
 /**
  * @brief 对象基类
  */

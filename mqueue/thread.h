@@ -4,12 +4,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
+#include "def.h"
 #include "message.h"
 #include "object.h"
 #include "timer.h"
-
-#include <pthread.h>
 
 typedef int (*thread_proc_t)(HMOD, int, WPARAM, LPARAM);  ///<线程处理函数类型
 
