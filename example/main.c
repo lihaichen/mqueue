@@ -27,8 +27,10 @@ static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
  */
 int register_task_test1(void) {
   object_thread_t ot;
-
-  ot = new_object_thread(thread_proc);
+  struct object_thread_config config;
+  config.stack_size = 2048;
+  config.priority = 20;
+  ot = new_object_thread(thread_proc, NULL);
   assert(ot);
 
   object_addend(&ot->parent, "test1", object_class_type_thread);
