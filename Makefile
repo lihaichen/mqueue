@@ -7,7 +7,6 @@ $(SRC_PATH)/message.c \
 $(SRC_PATH)/object.c \
 $(SRC_PATH)/thread.c \
 $(SRC_PATH)/timer.c \
-$(SRC_PATH)/main.c
 
 TEST_C_SOURCES += example/main.c
 
