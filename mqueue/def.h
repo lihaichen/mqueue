@@ -24,6 +24,8 @@ extern "C" {
 
 #define NOW time(NULL)
 
+#define MQUEUE_PRINT(...) printf(__VA_ARGS__)
+
 #define MQUEUE_LOCK_TYPE pthread_mutex_t
 #define MQUEUE_INIT_LOCK(lock) pthread_mutex_init(lock, NULL)
 #define MQUEUE_DEL_LOCK(lock) pthread_mutex_destroy(lock)
