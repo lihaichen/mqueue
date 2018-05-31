@@ -10,9 +10,6 @@ extern "C" {
 #include "object.h"
 #include "types.h"
 
-#include <pthread.h>
-#include <semaphore.h>
-
 #define MSG_TERM 0x0000
 
 /*

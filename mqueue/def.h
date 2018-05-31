@@ -5,6 +5,7 @@
 extern "C" {
 #endif /* __cplusplus */
 #include <pthread.h>
+#include <semaphore.h>
 #include <stdio.h>
 
 #define TRUE 1

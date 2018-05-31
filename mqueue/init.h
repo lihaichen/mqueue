@@ -9,10 +9,10 @@ extern "C" {
 #include "thread.h"
 
 void app_init(int argc, char** argv);
-int init(int argc, char** argv);
-void loop(void);
+int mqueue_init(int argc, char** argv);
+void mqueue_loop(void);
 
-struct object_information object_container[object_class_type_unknown];
+extern struct object_information object_container[object_class_type_unknown];
 #ifdef __cplusplus
 }
 #endif

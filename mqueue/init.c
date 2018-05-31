@@ -1,9 +1,7 @@
 
 #include "init.h"
-#include <semaphore.h>
-#include <signal.h>
 
-extern struct object_information object_container[object_class_type_unknown];
+struct object_information object_container[object_class_type_unknown];
 
 /**
  * @brief 启动工作线程
@@ -45,7 +43,7 @@ static int system_threads(void) {
  *
  * @return 成功返回0，失败返回失败的步骤
  */
-int init(int argc, char** argv) {
+int mqueue_init(int argc, char** argv) {
   global_container_init();  ///<对象容器初始化
   app_init(argc, argv);
 

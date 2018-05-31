@@ -42,7 +42,7 @@ void app_init(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-  init(argc, argv);
+  mqueue_init(argc, argv);
   mqueue_loop();
   return 0;
 }
