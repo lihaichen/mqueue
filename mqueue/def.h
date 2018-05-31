@@ -16,6 +16,10 @@ extern "C" {
 #define ONLINE 1
 #define CONNECTING 2
 
+#define MQUEUE_MALLOC(size) malloc(size)
+#define MQUEUE_CALLOC(n, size) calloc(n, size)
+#define MQUEUE_FREE(p) free(p)
+
 #define MQUEUE_USLEEP(us) usleep(us)
 
 #define NOW time(NULL)

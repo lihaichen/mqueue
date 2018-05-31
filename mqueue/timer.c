@@ -14,7 +14,7 @@ void timer_add(HMOD hmod, ULONG id, int init_tick, void* user_data, int type) {
   char name[OBJ_NAME_MAX];
   object_timer_t pt = NULL;
 
-  pt = (object_timer_t)calloc(1, sizeof(struct object_timer));
+  pt = (object_timer_t)MQUEUE_CALLOC(1, sizeof(struct object_timer));
   assert(pt);
 
   pt->hmod = hmod;
@@ -49,7 +49,7 @@ void timer_remove(HMOD hmod, ULONG id) {
 
   object_delete(po);
 
-  free(po);
+  MQUEUE_FREE(po);
 }
 
 /**

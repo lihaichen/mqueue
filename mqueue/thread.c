@@ -23,7 +23,7 @@ void* thread_entry(void* parameter) {
 object_thread_t new_object_thread(thread_proc_t thread_proc) {
   object_thread_t ot;
 
-  ot = (object_thread_t)calloc(1, sizeof(struct object_thread));
+  ot = (object_thread_t)MQUEUE_CALLOC(1, sizeof(struct object_thread));
   if (ot == NULL)
     return NULL;
 
