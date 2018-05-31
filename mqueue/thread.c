@@ -29,8 +29,8 @@ object_thread_t new_object_thread(thread_proc_t thread_proc) {
 
   ot->thread_proc = thread_proc;
   ot->entry = thread_entry;
-  INIT_LOCK(&ot->msgqueue.lock);
-  sem_init(&ot->msgqueue.wait, 0, 1);
+  MQUEUE_INIT_LOCK(&ot->msgqueue.lock);
+  MQUEUE_SEM_INIT(&ot->msgqueue.wait, 0, 1);
 
   ////////////
   object_container_init(&ot->io_container);

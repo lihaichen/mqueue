@@ -57,7 +57,7 @@ int post_message(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
   if (p == NULL)
     return -1;
 
-  ENTER_LOCK(&p->msgqueue.lock);
+  MQUEUE_ENTER_LOCK(&p->msgqueue.lock);
 
   if ((p->msgqueue.write_pos + 1) % 16 == p->msgqueue.read_pos)  //已经写满了
   {
@@ -78,11 +78,11 @@ int post_message(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
   p->msgqueue.dw_data |= QS_POSTMSG;
 
 err:
-  EXIT_LOCK(&p->msgqueue.lock);
+  MQUEUE_EXIT_LOCK(&p->msgqueue.lock);
 
-  sem_getvalue(&p->msgqueue.wait, &sem_value);
+  MQUEUE_SEM_GET_VALUE(&p->msgqueue.wait, &sem_value);
   if (sem_value == -1)  ///<如果有线程在等待
-    sem_post(&p->msgqueue.wait);
+    MQUEUE_SEM_POST(&p->msgqueue.wait);
 
   return rtn;
 }
@@ -104,7 +104,7 @@ int get_message(HMOD hmod, msg_t pmsg) {
 
   memset(pmsg, 0, sizeof(struct msg));
 
-  ENTER_LOCK(&p->msgqueue.lock);
+  MQUEUE_ENTER_LOCK(&p->msgqueue.lock);
 
   if (p->msgqueue.dw_data & QS_POSTMSG) {
     if (p->msgqueue.read_pos != p->msgqueue.write_pos) {
@@ -114,17 +114,17 @@ int get_message(HMOD hmod, msg_t pmsg) {
       if (p->msgqueue.read_pos >= MSGQUEUE_MAX)
         p->msgqueue.read_pos = 0;
 
-      EXIT_LOCK(&p->msgqueue.lock);
+      MQUEUE_EXIT_LOCK(&p->msgqueue.lock);
 
       return 0;
     } else  ///<已读完
       p->msgqueue.dw_data &= ~QS_POSTMSG;
   }
 
-  EXIT_LOCK(&p->msgqueue.lock);
+  MQUEUE_EXIT_LOCK(&p->msgqueue.lock);
 
   ///< no message to read
-  sem_wait(&p->msgqueue.wait);
+  MQUEUE_SEM_WAIT(&p->msgqueue.wait);
 
   return 0;
 }

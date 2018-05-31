@@ -17,7 +17,7 @@ void global_container_init(void) {
 }
 
 void object_container_init(struct object_information* container) {
-  INIT_LOCK(&container->lock);
+  MQUEUE_INIT_LOCK(&container->lock);
 
   container->list.prev = &container->list;
   container->list.next = &container->list;
@@ -26,19 +26,19 @@ void object_container_init(struct object_information* container) {
 }
 
 void object_container_deinit(struct object_information* container) {
-  DEL_LOCK(&container->lock);
+  MQUEUE_DEL_LOCK(&container->lock);
 }
 
 object_t object_container_first(struct object_information* container) {
   list_t* node;
   object_t p = NULL;
 
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   node = container->list.next;
   p = list_entry(node, struct object, list);
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   return p;
 }
@@ -47,13 +47,13 @@ object_t object_container_last(struct object_information* container) {
   list_t* node;
   object_t p = NULL;
 
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   node = container->list.prev;
   ;
   p = list_entry(node, struct object, list);
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   return p;
 }
@@ -64,7 +64,7 @@ object_t object_container_find(const char* name,
   list_t* node;
   object_t p = NULL;
 
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   for (node = container->list.next; node != &container->list;
        node = node->next) {
@@ -75,7 +75,7 @@ object_t object_container_find(const char* name,
     }
   }
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   if (find_obj == 0)
     return NULL;
@@ -108,11 +108,11 @@ void object_container_addend(object_t object,
 
   list = &container->list;
 
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   list_insert_before(list, &object->list);
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   container->size++;
 }
@@ -140,11 +140,11 @@ void object_addend(object_t object, const char* name, int type) {
 
 void object_container_delete(object_t object,
                              struct object_information* container) {
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   list_remove(&object->list);
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   container->size--;
 }
@@ -165,11 +165,11 @@ void object_delete(object_t object) {
 void object_insert_before(object_t n,
                           object_t l,
                           struct object_information* container) {
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   list_insert_before(&l->list, &n->list);
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   container->size++;
 }
@@ -177,11 +177,11 @@ void object_insert_before(object_t n,
 void object_insert_after(object_t n,
                          object_t l,
                          struct object_information* container) {
-  ENTER_LOCK(&container->lock);
+  MQUEUE_ENTER_LOCK(&container->lock);
 
   list_insert_after(&l->list, &n->list);
 
-  EXIT_LOCK(&container->lock);
+  MQUEUE_EXIT_LOCK(&container->lock);
 
   container->size++;
 }

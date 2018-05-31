@@ -142,14 +142,14 @@ static unsigned long long __timer_counter = 0;
 void* thread_timer_entry(void* parameter) {
   unsigned long long old_timer_counter = 0;
   object_timer_t pt;
-  sem_t* wait = (sem_t*)parameter;
+  MQUEUE_SEM_TYPE* wait = (MQUEUE_SEM_TYPE*)parameter;
   struct timespec spec;
-  sem_post(wait);
+  MQUEUE_SEM_POST(wait);
 
   for (;;) {
     clock_gettime(CLOCK_REALTIME, &spec);
     __timer_counter = (long)spec.tv_nsec / 1000000 + spec.tv_sec * 1000;
-    ENTER_LOCK(&object_container[object_class_type_timer].lock);
+    MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
 
     OBJECT_FOREACH(object_class_type_timer, object_timer_t, pt)
     if (pt->run == TIMER_STOP)
@@ -170,7 +170,7 @@ void* thread_timer_entry(void* parameter) {
     pt->timeout_tick = 0;
     OBJECT_FOREACH_END
 
-    EXIT_LOCK(&object_container[object_class_type_timer].lock);
+    MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
 
     old_timer_counter = __timer_counter;
     MQUEUE_USLEEP(2000);

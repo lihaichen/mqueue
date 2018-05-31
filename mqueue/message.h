@@ -60,8 +60,8 @@ typedef struct msgqueue {
   int read_pos;
   int write_pos;
 
-  sem_t wait;
-  pthread_mutex_t lock;
+  MQUEUE_SEM_TYPE wait;
+  MQUEUE_LOCK_TYPE lock;
   struct msg msg[MSGQUEUE_MAX];
 } * msgqueue_t;
 

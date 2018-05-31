@@ -12,20 +12,20 @@ extern struct object_information object_container[object_class_type_unknown];
  */
 static int system_threads(void) {
   int ret;
-  sem_t wait;
+  MQUEUE_SEM_TYPE wait;
   pthread_t tid;
   object_thread_t ot;
 
   ///<启动定时器线程
   // vlog("==> start thread '%s'\n", "timer");
-  sem_init(&wait, 0, 0);
+  MQUEUE_SEM_INIT(&wait, 0, 0);
   ret = pthread_create(&tid, NULL, thread_timer_entry, &wait);
   if (ret != 0) {
     // vlog("==> create thread 'timer' error[%d]!\n", ret);
     return -1;
   }
-  sem_wait(&wait);  ///<待定时器线程启动完毕后再启动其它线程
-  sem_destroy(&wait);
+  MQUEUE_SEM_WAIT(&wait);  ///<待定时器线程启动完毕后再启动其它线程
+  MQUEUE_SME_DESTROY(&wait);
 
   ///<启动应用线程
   OBJECT_FOREACH(object_class_type_thread, object_thread_t, ot)

@@ -40,7 +40,7 @@ enum object_class_type {
 struct object_information {
   enum object_class_type type;  ///<类型
 
-  pthread_mutex_t lock;  ///<锁
+  MQUEUE_LOCK_TYPE lock;  ///<锁
 
   int size;     ///<长度
   list_t list;  ///<链表头
