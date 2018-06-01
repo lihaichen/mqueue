@@ -38,7 +38,7 @@ static equeue_tick __timer_counter = 0;
 
 /**
  * @brief 定时器线程唤醒信号
-*/
+ */
 #ifdef TIMER_SORT
 static MQUEUE_SEM_TYPE __timer_wakeup;
 #endif
@@ -98,6 +98,7 @@ void timer_add(HMOD hmod, ULONG id, int init_tick, void* user_data, int type) {
   sprintf(name, "%016lX:%016lX", hmod, id);
   strncpy(pt->parent.name, name, OBJ_NAME_MAX);
   timer_insert_bytime(pt);
+  MQUEUE_SEM_POST(__timer_wakeup);
 }
 #endif
 
@@ -250,7 +251,7 @@ void* thread_timer_entry(void* parameter) {
   MQUEUE_SEM_TYPE* wait = (MQUEUE_SEM_TYPE*)parameter;
   struct timespec spec;
   MQUEUE_SEM_POST(wait);
-  MQUEUE_SEM_INIT(&__timer_wakeup,0,0);
+  MQUEUE_SEM_INIT(&__timer_wakeup, 0, 0);
   for (;;) {
     pt = NULL;
     // 查找最近的定时器
@@ -314,7 +315,7 @@ static void timer_insert_bytime(object_timer_t timer) {
     continue;
   if (pt->timeout_tick - timer->timeout_tick == 0)
     continue;
-  else if (pt->timeout_tick - timer->timeout_tick < (0xFFFFFFFF / 2))
+  else if (EQUEUE_IS_TIMEOUT(pt->timeout_tick, timer->timeout_tick))
     break;
   OBJECT_FOREACH_END
   if (pt == NULL) {
@@ -328,7 +329,6 @@ static void timer_insert_bytime(object_timer_t timer) {
   return;
 }
 #endif
-
 
 /**
  * @brief 定时器线程休眠
@@ -345,6 +345,6 @@ static void timer_thread_sleep(int ms) {
   tick += ms;
   ts.tv_nsec = ms * 1000 * 1000 % (1000 * 1000 * 1000);
   ts.tv_sec = ms / 1000;
-  MQUEUE_SEM_WAIT_TIME(&__timer_wakeup,&ts);
+  MQUEUE_SEM_WAIT_TIME(&__timer_wakeup, &ts);
 }
 #endif
