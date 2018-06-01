@@ -51,6 +51,7 @@ extern "C" {
 #define MQUEUE_SEM_TYPE sem_t
 #define MQUEUE_SEM_INIT(sem, p, v) sem_init(sem, p, v)
 #define MQUEUE_SEM_WAIT(sem) sem_wait(sem)
+#define MQUEUE_SEM_WAIT_TIME(sem,ts) sem_timedwait(sem,ts)
 #define MQUEUE_SME_DESTROY(sem) sem_destroy(sem)
 #define MQUEUE_SEM_POST(sem) sem_post(sem)
 #define MQUEUE_SEM_GET_VALUE(sem, value) sem_getvalue(sem, value)

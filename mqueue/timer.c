@@ -18,6 +18,31 @@ extern struct object_information object_container[object_class_type_unknown];
 static void timer_insert_bytime(object_timer_t timer);
 #endif
 
+/**
+ * @brief 定时器线程休眠
+ *
+ * @param parameter 休眠时长
+ *
+ * @return 不会返回
+ */
+#ifdef TIMER_SORT
+static void timer_thread_sleep(int ms);
+#endif
+
+/**
+ * @brief 计数器
+ */
+#ifndef TIMER_SORT
+static equeue_tick __timer_counter = 0;
+#endif
+
+/**
+ * @brief 定时器线程唤醒信号
+*/
+#ifdef TIMER_SORT
+static MQUEUE_SEM_TYPE __timer_wakeup;
+#endif
+
 #ifndef TIMER_SORT
 /**
  * @brief 定时器-添加定时器
@@ -174,11 +199,6 @@ void timer_control(HMOD hmod, ULONG id, int init_tick) {
 }
 
 /**
- * @brief 计数器
- */
-static equeue_tick __timer_counter = 0;
-
-/**
  * @brief 定时器线程入口
  *
  * @param parameter 线程参数（互斥量）
@@ -230,6 +250,7 @@ void* thread_timer_entry(void* parameter) {
   MQUEUE_SEM_TYPE* wait = (MQUEUE_SEM_TYPE*)parameter;
   struct timespec spec;
   MQUEUE_SEM_POST(wait);
+  MQUEUE_SEM_INIT(&__timer_wakeup,0,0);
   for (;;) {
     pt = NULL;
     // 查找最近的定时器
@@ -241,7 +262,9 @@ void* thread_timer_entry(void* parameter) {
     OBJECT_FOREACH_END
     MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
     if (pt == NULL) {
+      /// 没有定时器，进行休眠
       MQUEUE_MSLEEP(100);
+      // timer_thread_sleep(100);
       continue;
     }
     if (EQUEUE_IS_TIMEOUT(current_time, pt->timeout_tick)) {
@@ -263,6 +286,7 @@ void* thread_timer_entry(void* parameter) {
       if (diff < 1)
         diff = 1;
       MQUEUE_MSLEEP(diff);
+      // timer_thread_sleep(diff);
     }
   }
 
@@ -302,5 +326,25 @@ static void timer_insert_bytime(object_timer_t timer) {
   }
   MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
   return;
+}
+#endif
+
+
+/**
+ * @brief 定时器线程休眠
+ *
+ * @param parameter 休眠时长
+ *
+ * @return 不会返回
+ */
+#ifdef TIMER_SORT
+static void timer_thread_sleep(int ms) {
+  struct timespec ts;
+  equeue_tick tick;
+  EQUEUE_GET_TICK(&tick);
+  tick += ms;
+  ts.tv_nsec = ms * 1000 * 1000 % (1000 * 1000 * 1000);
+  ts.tv_sec = ms / 1000;
+  MQUEUE_SEM_WAIT_TIME(&__timer_wakeup,&ts);
 }
 #endif
