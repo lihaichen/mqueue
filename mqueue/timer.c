@@ -218,7 +218,7 @@ void* thread_timer_entry(void* parameter) {
     MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
 
     old_timer_counter = __timer_counter;
-    MQUEUE_USLEEP(2000);
+    MQUEUE_MSLEEP(2);
   }
 
   return NULL;
@@ -258,10 +258,10 @@ void* thread_timer_entry(void* parameter) {
         int diff = pt->timeout_tick - current_time - 2;
         if (diff < 1)
           diff = 1;
-        MQUEUE_USLEEP(diff * 1000);
+        MQUEUE_MSLEEP(diff);
       }
     } else {
-      MQUEUE_USLEEP(1000 * 100);
+      MQUEUE_MSLEEP(100);
     }
   }
 

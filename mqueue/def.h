@@ -29,7 +29,7 @@ extern "C" {
 #define MQUEUE_CALLOC(n, size) calloc(n, size)
 #define MQUEUE_FREE(p) free(p)
 
-#define MQUEUE_USLEEP(us) usleep(us)
+#define MQUEUE_MSLEEP(ms) usleep((ms) * 1000)
 
 #define NOW time(NULL)
 
