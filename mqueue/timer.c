@@ -98,7 +98,7 @@ void timer_add(HMOD hmod, ULONG id, int init_tick, void* user_data, int type) {
   sprintf(name, "%016lX:%016lX", hmod, id);
   strncpy(pt->parent.name, name, OBJ_NAME_MAX);
   timer_insert_bytime(pt);
-  MQUEUE_SEM_POST(__timer_wakeup);
+  MQUEUE_SEM_POST(&__timer_wakeup);
 }
 #endif
 
