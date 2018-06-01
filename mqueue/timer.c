@@ -240,28 +240,29 @@ void* thread_timer_entry(void* parameter) {
       break;
     OBJECT_FOREACH_END
     MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
-    if (pt) {
-      if (EQUEUE_IS_TIMEOUT(current_time, pt->timeout_tick)) {
-        // 移除定时器
-        MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
-        list_remove(&pt->parent.list);
-        MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
-        // 重新添加定时器
-        timer_insert_bytime(pt);
-        if (pt->type == TIMER_ASYNC)
-          post_message(pt->hmod, MSG_TIMER, (WPARAM)pt->id,
-                       (LPARAM)pt->user_data);
-        else if (pt->type == TIMER_SYNC)
-          send_message(pt->hmod, MSG_TIMER, (WPARAM)pt->id,
-                       (LPARAM)pt->user_data);
-      } else {
-        int diff = pt->timeout_tick - current_time - 2;
-        if (diff < 1)
-          diff = 1;
-        MQUEUE_MSLEEP(diff);
-      }
-    } else {
+    if (pt == NULL) {
       MQUEUE_MSLEEP(100);
+      continue;
+    }
+    if (EQUEUE_IS_TIMEOUT(current_time, pt->timeout_tick)) {
+      // 移除定时器
+      MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
+      list_remove(&pt->parent.list);
+      MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
+      // 重新添加定时器
+      timer_insert_bytime(pt);
+      if (pt->type == TIMER_ASYNC)
+        post_message(pt->hmod, MSG_TIMER, (WPARAM)pt->id,
+                     (LPARAM)pt->user_data);
+      else if (pt->type == TIMER_SYNC)
+        send_message(pt->hmod, MSG_TIMER, (WPARAM)pt->id,
+                     (LPARAM)pt->user_data);
+    } else {
+      // 未超时定时器
+      int diff = pt->timeout_tick - current_time - 2;
+      if (diff < 1)
+        diff = 1;
+      MQUEUE_MSLEEP(diff);
     }
   }
 
