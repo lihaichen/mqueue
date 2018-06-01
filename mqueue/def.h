@@ -4,9 +4,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
+#include <assert.h>
+#include <poll.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -24,6 +33,13 @@ extern "C" {
 
 #define NOW time(NULL)
 
+#define EQUEUE_GET_TICK(ms) \
+  do {                      \
+  struct timespec spec; \
+  clock_gettime(CLOCK_REALTIME, &spec); \
+  *ms = (spec.tv_nsec / 1000000 + spec.tv_sec * 1000); \
+  } while (0)
+
 #define MQUEUE_PRINT(...) printf(__VA_ARGS__)
 
 #define MQUEUE_LOCK_TYPE pthread_mutex_t
@@ -38,6 +54,13 @@ extern "C" {
 #define MQUEUE_SME_DESTROY(sem) sem_destroy(sem)
 #define MQUEUE_SEM_POST(sem) sem_post(sem)
 #define MQUEUE_SEM_GET_VALUE(sem, value) sem_getvalue(sem, value)
+
+#define MQUEUE_ASSERT(EX)                                   \
+  do {                                                      \
+    if (!(EX)) {                                            \
+      MQUEUE_PRINT("%s,%s,%d", #EX, __FUNCTION__, __LINE__); \
+    }                                                       \
+  } while (0)
 
 #ifdef __cplusplus
 }

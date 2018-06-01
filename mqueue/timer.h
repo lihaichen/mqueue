@@ -17,18 +17,6 @@
  */
 #ifndef __MQUEUE_TIMER_H__
 #define __MQUEUE_TIMER_H__
-
-#include <assert.h>
-#include <poll.h>
-#include <semaphore.h>
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
-#include <time.h>
-#include <unistd.h>
 #include "message.h"
 #include "object.h"
 
@@ -42,6 +30,14 @@
 #define ONE_SECOND TICK_PER_SECOND
 
 #define TIMERID_DEFAULT -1
+
+#define EQUEUE_MAX_TICK 0xFFFFFFFF
+// 单位为ms
+typedef unsigned int equeue_tick;
+
+#define EQUEUE_IS_TIMEOUT(current, timeout)                         \
+  ((equeue_tick)((equeue_tick)(current) - (equeue_tick)(timeout)) < \
+   EQUEUE_MAX_TICK / 2)
 
 /**
  * @brief 定时器回调函数类型
@@ -63,8 +59,8 @@ typedef struct object_timer {
   HMOD hmod;  ///<定时器归属
   ULONG id;   ///<定时器编号
 
-  int timeout_tick;  ///<当前定时计数
-  int init_tick;     ///<定时器超时时间
+  unsigned int timeout_tick;  ///<当前定时计数
+  unsigned int init_tick;     ///<定时器超时时间
 
   int run;   ///< 0 pause, 1 run
   int type;  ///< 0 async, 1 sync

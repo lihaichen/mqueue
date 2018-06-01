@@ -21,24 +21,21 @@ extern "C" {
 
 
 #ifdef EQUEUE_INFO
-#define equeue_info(format, ...) \
-  MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
+#define equeue_info(format, ...) MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
 #else
-#define equeue_info(x...)
+#define equeue_info(...)
 #endif
 
 #ifdef EQUEUE_WARN
-#define equeue_warn(format, ...) \
-  MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
+#define equeue_warn(format, ...) MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
 #else
-#define equeue_warn(x...)
+#define equeue_warn(...)
 #endif
 
 #ifdef EQUEUE_ERROR
-#define equeue_error(format, ...) \
-  MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
+#define equeue_error(format, ...) MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
 #else
-#define equeue_error(x...)
+#define equeue_error(...)
 #endif
 
 #ifdef __cplusplus
