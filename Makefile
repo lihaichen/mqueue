@@ -22,7 +22,7 @@ TARGET = test
 LIB = equeue.a
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
-	$(CC) $(INC) -o $(TARGET) $(OBJS) $(TEST_OBJS)
+	$(CC) -g -O0 $(INC) -o $(TARGET) $(OBJS) $(TEST_OBJS)
 
 $(LIB): $(OBJS)
 	ar rc $(LIB) $(OBJS)

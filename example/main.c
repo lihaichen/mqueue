@@ -3,7 +3,7 @@
 static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
   switch (message) {
     case MSG_INIT: {
-      equeue_info("MSG_INIT\n");
+      mqueue_info("MSG_INIT\n");
       timer_add(hmod, 1, 1000, NULL, TIMER_ASYNC);
       timer_start(hmod, 1);
 
@@ -15,10 +15,12 @@ static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
     case MSG_TIMER: {
       equeue_tick recv_time;
       EQUEUE_GET_TICK(&recv_time);
-      equeue_info("MSG_TIMER %lu %lu %u\n", wparam, lparam, recv_time);
+      mqueue_info("MSG_TIMER %lu %lu %u\n", wparam, lparam, recv_time);
+          timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC);
+      timer_start(hmod, 2);
     } break;
     case MSG_COMMAND: {
-      equeue_info("MSG_COMMAND\n");
+      mqueue_info("MSG_COMMAND\n");
     } break;
   }
 

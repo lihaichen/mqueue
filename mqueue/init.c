@@ -16,11 +16,11 @@ static int system_threads(void) {
   object_thread_t ot;
 
   ///<启动定时器线程
-  equeue_info("==> start thread '%s'\n", "timer");
+  mqueue_info("==> start thread '%s'\n", "timer");
   MQUEUE_SEM_INIT(&wait, 0, 0);
   ret = pthread_create(&tid, NULL, thread_timer_entry, &wait);
   if (ret != 0) {
-    equeue_info("==> create thread 'timer' error[%d]!\n", ret);
+    mqueue_info("==> create thread 'timer' error[%d]!\n", ret);
     return -1;
   }
   MQUEUE_SEM_WAIT(&wait);  ///<待定时器线程启动完毕后再启动其它线程
@@ -28,10 +28,10 @@ static int system_threads(void) {
 
   ///<启动应用线程
   OBJECT_FOREACH(object_class_type_thread, object_thread_t, ot)
-  equeue_info("==> start thread '%s'\n", ((object_t)ot)->name);
+  mqueue_info("==> start thread '%s'\n", ((object_t)ot)->name);
   ret = start_object_thread(ot);
   if (ret != 0) {
-    equeue_info("==> create thread '%s' error[%d]!\n", ((object_t)ot)->name, ret);
+    mqueue_info("==> create thread '%s' error[%d]!\n", ((object_t)ot)->name, ret);
     return -1;
   }
   OBJECT_FOREACH_END

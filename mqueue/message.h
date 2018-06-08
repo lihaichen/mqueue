@@ -36,6 +36,16 @@ extern "C" {
  */
 #define QS_POSTMSG 0x4000
 
+/*
+ * @brief 常用命令类型（IO收到消息）
+ */
+#define MSG_COMMAND_POLLIN 0x01
+
+/*
+ * @brief 用户命令开头
+ */
+#define MSG_COMMAND_USER 0x100
+
 /**
  * @brief 线程间消息结构
  */

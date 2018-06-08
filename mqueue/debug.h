@@ -7,35 +7,35 @@ extern "C" {
 #include "def.h"
 #define HAVE_FUNCTIONNAME
 
-#define EQUEUE_INFO
-#define EQUEUE_WARN
-#define EQUEUE_ERROR
+#define MQUEUE_INFO
+#define MQUEUE_WARN
+#define MQUEUE_ERROR
 
 #ifdef HAVE_FUNCTIONNAME
-#define EQUEUE_EXTRA_FMT "%s: "
-#define EQUEUE_EXTRA_ARG , __FUNCTION__
+#define MQUEUE_EXTRA_FMT "%s: "
+#define MQUEUE_EXTRA_ARG , __FUNCTION__
 #else
-#define EQUEUE_EXTRA_FMT
-#define EQUEUE_EXTRA_ARG
+#define MQUEUE_EXTRA_FMT
+#define MQUEUE_EXTRA_ARG
 #endif
 
 
-#ifdef EQUEUE_INFO
-#define equeue_info(format, ...) MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
+#ifdef MQUEUE_INFO
+#define mqueue_info(format, ...) MQUEUE_PRINT(MQUEUE_EXTRA_FMT format MQUEUE_EXTRA_ARG, ##__VA_ARGS__)
 #else
-#define equeue_info(...)
+#define mqueue_info(...)
 #endif
 
-#ifdef EQUEUE_WARN
-#define equeue_warn(format, ...) MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
+#ifdef MQUEUE_WARN
+#define mqueue_warn(format, ...) MQUEUE_PRINT(MQUEUE_EXTRA_FMT format MQUEUE_EXTRA_ARG, ##__VA_ARGS__)
 #else
-#define equeue_warn(...)
+#define mqueue_warn(...)
 #endif
 
-#ifdef EQUEUE_ERROR
-#define equeue_error(format, ...) MQUEUE_PRINT(EQUEUE_EXTRA_FMT format EQUEUE_EXTRA_ARG, ##__VA_ARGS__)
+#ifdef MQUEUE_ERROR
+#define mqueue_error(format, ...) MQUEUE_PRINT(MQUEUE_EXTRA_FMT format MQUEUE_EXTRA_ARG, ##__VA_ARGS__)
 #else
-#define equeue_error(...)
+#define mqueue_error(...)
 #endif
 
 #ifdef __cplusplus

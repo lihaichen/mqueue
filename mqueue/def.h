@@ -29,15 +29,15 @@ extern "C" {
 #define MQUEUE_CALLOC(n, size) calloc(n, size)
 #define MQUEUE_FREE(p) free(p)
 
-#define MQUEUE_MSLEEP(ms) usleep((ms) * 1000)
+#define MQUEUE_MSLEEP(ms) usleep((ms)*1000)
 
 #define NOW time(NULL)
 
-#define EQUEUE_GET_TICK(ms) \
-  do {                      \
-  struct timespec spec; \
-  clock_gettime(CLOCK_REALTIME, &spec); \
-  *ms = (spec.tv_nsec / 1000000 + spec.tv_sec * 1000); \
+#define EQUEUE_GET_TICK(ms)                                                  \
+  do {                                                                       \
+    struct timespec spec;                                                    \
+    clock_gettime(CLOCK_REALTIME, &spec);                                    \
+    *ms = (spec.tv_nsec / 1000000 + (unsigned long long)spec.tv_sec * 1000); \
   } while (0)
 
 #define MQUEUE_PRINT(...) printf(__VA_ARGS__)
@@ -51,16 +51,16 @@ extern "C" {
 #define MQUEUE_SEM_TYPE sem_t
 #define MQUEUE_SEM_INIT(sem, p, v) sem_init(sem, p, v)
 #define MQUEUE_SEM_WAIT(sem) sem_wait(sem)
-#define MQUEUE_SEM_WAIT_TIME(sem,ts) sem_timedwait(sem,ts)
+#define MQUEUE_SEM_WAIT_TIME(sem, ts) sem_timedwait(sem, ts)
 #define MQUEUE_SME_DESTROY(sem) sem_destroy(sem)
 #define MQUEUE_SEM_POST(sem) sem_post(sem)
 #define MQUEUE_SEM_GET_VALUE(sem, value) sem_getvalue(sem, value)
 
-#define MQUEUE_ASSERT(EX)                                   \
-  do {                                                      \
-    if (!(EX)) {                                            \
+#define MQUEUE_ASSERT(EX)                                    \
+  do {                                                       \
+    if (!(EX)) {                                             \
       MQUEUE_PRINT("%s,%s,%d", #EX, __FUNCTION__, __LINE__); \
-    }                                                       \
+    }                                                        \
   } while (0)
 
 #ifdef __cplusplus
