@@ -230,6 +230,7 @@ void* thread_timer_entry(void* parameter) {
   for (;;) {
     pt = NULL;
     // 查找最近的定时器
+    MQUEUE_SEM_SET_VALUE(&__timer_wakeup,0);
     EQUEUE_GET_TICK(&current_time);
     MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
     OBJECT_FOREACH(object_class_type_timer, object_timer_t, pt)
@@ -243,6 +244,7 @@ void* thread_timer_entry(void* parameter) {
       // timer_thread_sleep(100);
       continue;
     }
+
     if (EQUEUE_IS_TIMEOUT(current_time, pt->timeout_tick)) {
       HMOD hmod = pt->hmod;
       WPARAM id = (WPARAM)pt->id;
@@ -252,6 +254,7 @@ void* thread_timer_entry(void* parameter) {
       if (type & TIMER_PERIODIC) {
         // 重新添加定时器
         timer_insert_bytime(pt);
+        printf("restart timer %d\n",id);
       } else {
         /// 单次定时器 直接移除
         object_delete(&pt->parent);

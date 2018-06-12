@@ -55,6 +55,7 @@ extern "C" {
 #define MQUEUE_SME_DESTROY(sem) sem_destroy(sem)
 #define MQUEUE_SEM_POST(sem) sem_post(sem)
 #define MQUEUE_SEM_GET_VALUE(sem, value) sem_getvalue(sem, value)
+#define MQUEUE_SEM_SET_VALUE(sem, value)
 
 #define MQUEUE_ASSERT(EX)                                    \
   do {                                                       \

@@ -33,6 +33,7 @@ typedef struct object_thread {
   struct object_information io_container;     ///<线程管理的IO容器
 
   struct msgqueue msgqueue;  ///<消息队列
+  MQUEUE_SEM_TYPE lock;
 } * object_thread_t;
 
 void* thread_entry(void* parameter);

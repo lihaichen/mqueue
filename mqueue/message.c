@@ -28,14 +28,17 @@ HMOD find_thread(const char* name) {
  * @return 发送成功返回0，失败返回-1
  */
 int send_message(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
-  if (hmod == 0)
-    return -1;
-
+  int ret = -1;
+  object_thread_t ot = hmod;
+  if (ot == 0)
+    return ret;
   thread_proc_t thread_proc = ((object_thread_t)hmod)->thread_proc;
   if (thread_proc == NULL)
-    return -1;
-
-  return thread_proc(hmod, message, wparam, lparam);
+    return ret;
+  MQUEUE_SEM_WAIT(&ot->lock);
+  ret = thread_proc(hmod, message, wparam, lparam);
+  MQUEUE_SEM_POST(&ot->lock);
+  return ret;
 }
 
 /**
@@ -137,14 +140,17 @@ int get_message(HMOD hmod, msg_t pmsg) {
  * @return 成功返回0，失败返回-1
  */
 int dispatch_message(msg_t pmsg) {
-  thread_proc_t thread_proc;
-
+  object_thread_t ot = NULL;
+  thread_proc_t thread_proc = NULL;
+  int ret = -1;
   if (pmsg == NULL || pmsg->hmod == 0)
-    return -1;
-
-  thread_proc = ((object_thread_t)pmsg->hmod)->thread_proc;
+    return ret;
+  ot = (object_thread_t)pmsg->hmod;
+  thread_proc = ot->thread_proc;
   if (thread_proc == NULL)
-    return -1;
-
-  return thread_proc(pmsg->hmod, pmsg->message, pmsg->wparam, pmsg->lparam);
+    return ret;
+  MQUEUE_SEM_WAIT(&ot->lock);
+  ret = thread_proc(pmsg->hmod, pmsg->message, pmsg->wparam, pmsg->lparam);
+  MQUEUE_SEM_POST(&ot->lock);
+  return ret;
 }
