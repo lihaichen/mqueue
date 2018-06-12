@@ -230,7 +230,7 @@ void* thread_timer_entry(void* parameter) {
   for (;;) {
     pt = NULL;
     // 查找最近的定时器
-    MQUEUE_SEM_SET_VALUE(&__timer_wakeup,0);
+    MQUEUE_SEM_SET_VALUE(&__timer_wakeup, 0);
     EQUEUE_GET_TICK(&current_time);
     MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
     OBJECT_FOREACH(object_class_type_timer, object_timer_t, pt)
@@ -244,7 +244,6 @@ void* thread_timer_entry(void* parameter) {
       // timer_thread_sleep(100);
       continue;
     }
-
     if (EQUEUE_IS_TIMEOUT(current_time, pt->timeout_tick)) {
       HMOD hmod = pt->hmod;
       WPARAM id = (WPARAM)pt->id;
@@ -254,7 +253,6 @@ void* thread_timer_entry(void* parameter) {
       if (type & TIMER_PERIODIC) {
         // 重新添加定时器
         timer_insert_bytime(pt);
-        printf("restart timer %d\n",id);
       } else {
         /// 单次定时器 直接移除
         object_delete(&pt->parent);
@@ -291,28 +289,30 @@ void* thread_timer_entry(void* parameter) {
 #ifdef TIMER_SORT
 static void timer_insert_bytime(object_timer_t timer) {
   object_timer_t pt = NULL;
+  object_t insert_node = NULL;
   MQUEUE_ASSERT(timer);
   EQUEUE_GET_TICK(&timer->timeout_tick);
   timer->timeout_tick += timer->init_tick - 2;
   object_delete(&timer->parent);
+
   MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
+  insert_node = list_entry(&object_container[object_class_type_timer].list, struct object, list);
   OBJECT_FOREACH(object_class_type_timer, object_timer_t, pt)
-  if (pt->run == TIMER_STOP)
+  if (pt->run == TIMER_STOP){
+    insert_node = pt;
     continue;
-  if (pt->timeout_tick - timer->timeout_tick == 0)
+  }
+  if (pt->timeout_tick - timer->timeout_tick == 0){
+    insert_node = pt;
     continue;
+  }
   else if (EQUEUE_IS_TIMEOUT(pt->timeout_tick, timer->timeout_tick))
     break;
+  insert_node = pt;
   OBJECT_FOREACH_END
   MQUEUE_EXIT_LOCK(&object_container[object_class_type_timer].lock);
-  if (pt == NULL) {
-    // 第一次添加定时器
-    object_container_addend(&timer->parent,
-                            &object_container[object_class_type_timer]);
-  } else {
-    object_insert_before(&timer->parent, &pt->parent,
-                         &object_container[object_class_type_timer]);
-  }
+  object_insert_after(&timer->parent, insert_node,
+                      &object_container[object_class_type_timer]);
 
   return;
 }

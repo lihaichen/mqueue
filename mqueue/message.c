@@ -128,7 +128,7 @@ int get_message(HMOD hmod, msg_t pmsg) {
 
   ///< no message to read
   MQUEUE_SEM_WAIT(&p->msgqueue.wait);
-
+  MQUEUE_SEM_SET_VALUE(&p->msgqueue.wait, 0);
   return 0;
 }
 

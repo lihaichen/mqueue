@@ -9,15 +9,18 @@ static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
 
       timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC | TIMER_PERIODIC);
       timer_start(hmod, 2);
+
+      // timer_add(hmod, 3, 5000, NULL, TIMER_ASYNC | TIMER_PERIODIC);
+      // timer_start(hmod, 3);
     }
 
     break;
     case MSG_TIMER: {
       equeue_tick recv_time;
       EQUEUE_GET_TICK(&recv_time);
-      mqueue_info("MSG_TIMER %d %d %llu\n", wparam, lparam, recv_time);
+      mqueue_info("MSG_TIMER %ld %ld %llu\n", wparam, lparam, recv_time);
       if(wparam == 2){
-        // timer_add(hmod, 2, 2000, NULL, TIMER_SYNC);
+        // timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC);
         // timer_start(hmod, 2);
       }
     } break;

@@ -50,7 +50,7 @@ object_t object_container_last(struct object_information* container) {
   MQUEUE_ENTER_LOCK(&container->lock);
 
   node = container->list.prev;
-  ;
+
   p = list_entry(node, struct object, list);
 
   MQUEUE_EXIT_LOCK(&container->lock);
