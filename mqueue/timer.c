@@ -296,17 +296,17 @@ static void timer_insert_bytime(object_timer_t timer) {
   object_delete(&timer->parent);
 
   MQUEUE_ENTER_LOCK(&object_container[object_class_type_timer].lock);
-  insert_node = list_entry(&object_container[object_class_type_timer].list, struct object, list);
+  insert_node = list_entry(&object_container[object_class_type_timer].list,
+                           struct object, list);
   OBJECT_FOREACH(object_class_type_timer, object_timer_t, pt)
-  if (pt->run == TIMER_STOP){
+  if (pt->run == TIMER_STOP) {
     insert_node = pt;
     continue;
   }
-  if (pt->timeout_tick - timer->timeout_tick == 0){
+  if (pt->timeout_tick - timer->timeout_tick == 0) {
     insert_node = pt;
     continue;
-  }
-  else if (EQUEUE_IS_TIMEOUT(pt->timeout_tick, timer->timeout_tick))
+  } else if (EQUEUE_IS_TIMEOUT(pt->timeout_tick, timer->timeout_tick))
     break;
   insert_node = pt;
   OBJECT_FOREACH_END

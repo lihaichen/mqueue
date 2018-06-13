@@ -7,11 +7,11 @@ static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
       timer_add(hmod, 1, 1000, NULL, TIMER_ASYNC | TIMER_PERIODIC);
       timer_start(hmod, 1);
 
-      timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC | TIMER_PERIODIC);
+      timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC);
       timer_start(hmod, 2);
 
-      // timer_add(hmod, 3, 5000, NULL, TIMER_ASYNC | TIMER_PERIODIC);
-      // timer_start(hmod, 3);
+      timer_add(hmod, 3, 5000, NULL, TIMER_SYNC | TIMER_PERIODIC);
+      timer_start(hmod, 3);
     }
 
     break;
@@ -20,8 +20,8 @@ static int thread_proc(HMOD hmod, int message, WPARAM wparam, LPARAM lparam) {
       EQUEUE_GET_TICK(&recv_time);
       mqueue_info("MSG_TIMER %ld %ld %llu\n", wparam, lparam, recv_time);
       if(wparam == 2){
-        // timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC);
-        // timer_start(hmod, 2);
+        timer_add(hmod, 2, 2000, NULL, TIMER_ASYNC);
+        timer_start(hmod, 2);
       }
     } break;
     case MSG_COMMAND: {
